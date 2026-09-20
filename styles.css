@@ -1,0 +1,919 @@
+/* ============================================================================
+ * Advanced Automotive Clinic — stylesheet
+ *
+ * Light theme only, by design: a local business site should look the same
+ * to every visitor regardless of their device's dark-mode setting.
+ *
+ * Structure:
+ *   1. Design tokens
+ *   2. Reset & base
+ *   3. Layout primitives
+ *   4. Header
+ *   5. Status banner
+ *   6. Hero
+ *   7. Services
+ *   8. About
+ *   9. Updates
+ *  10. Hours & location
+ *  11. Footer
+ *  12. No-script fallback
+ * ========================================================================== */
+
+
+/* 1. Design tokens =========================================================
+ * Retune the entire site from this block.
+ * ======================================================================== */
+:root {
+  /* Neutral ramp — graphite through near-white */
+  --c-900: #0f1419;
+  --c-800: #171d24;
+  --c-700: #222b35;
+  --c-600: #38434f;
+  --c-500: #5a6876;
+  --c-400: #8494a3;
+  --c-300: #b9c4ce;
+  --c-200: #dde3e9;
+  --c-100: #eef1f4;
+  --c-050: #f7f9fa;
+  --c-000: #ffffff;
+
+  /* Brand accent — steel blue. Deliberately NOT amber: amber and red belong
+     to the status states, so they never read as decoration. */
+  --accent: #2f6f9f;
+  --accent-strong: #1f567d;
+  --accent-soft: #e8f1f8;
+
+  /* Semantic surfaces */
+  --bg: var(--c-050);
+  --bg-alt: var(--c-100);
+  --surface: var(--c-000);
+  --border: var(--c-200);
+  --border-strong: var(--c-300);
+  --text: var(--c-900);
+  --text-muted: var(--c-500);
+  --text-subtle: var(--c-400);
+  --text-invert: var(--c-050);
+
+  /* Status levels — bg / border / text triples, each AA against its own bg */
+  --st-good-bg: #e7f6ed;
+  --st-good-border: #9dd6b4;
+  --st-good-text: #14532d;
+  --st-good-accent: #1f7a45;
+
+  --st-info-bg: #e8f1f8;
+  --st-info-border: #a8c8e0;
+  --st-info-text: #14405e;
+  --st-info-accent: #1f567d;
+
+  --st-warning-bg: #fdf3e0;
+  --st-warning-border: #e8c583;
+  --st-warning-text: #6b4310;
+  --st-warning-accent: #a5670d;
+
+  --st-closed-bg: #fdeceb;
+  --st-closed-border: #f0aeaa;
+  --st-closed-text: #7a1f1a;
+  --st-closed-accent: #a32b22;
+
+  /* Type */
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-base: 1.0625rem;
+  --fs-lg: clamp(1.125rem, 0.5vw + 1rem, 1.25rem);
+  --fs-xl: clamp(1.375rem, 1vw + 1.1rem, 1.75rem);
+  --fs-2xl: clamp(1.75rem, 2vw + 1.2rem, 2.5rem);
+  --fs-3xl: clamp(2.25rem, 4vw + 1.2rem, 3.75rem);
+
+  /* Space */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+
+  --shell-max: 1140px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* Tight radii and almost no shadow. Soft, floating, heavily-rounded cards
+     are the strongest "SaaS landing page" tell; flat panels with a real
+     border read like a business that exists in a building. */
+  --radius-sm: 3px;
+  --radius: 4px;
+  --radius-lg: 6px;
+
+  --shadow-sm: none;
+  --shadow: 0 1px 2px rgba(15, 20, 25, 0.06);
+  --shadow-lg: 0 4px 16px rgba(15, 20, 25, 0.10);
+
+  --speed: 150ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+
+/* 2. Reset & base ========================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 650;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color var(--speed) var(--ease);
+}
+
+a:hover {
+  color: var(--accent-strong);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img,
+svg,
+iframe {
+  max-width: 100%;
+}
+
+/* Must come after any rule that sets `display`. Several elements here are
+   toggled with the `hidden` attribute but also carry a display value
+   (grid/flex/inline-flex), and that would otherwise win — leaving "hidden"
+   elements on screen. */
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--sp-4);
+  z-index: 100;
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--sp-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* 3. Layout primitives ===================================================== */
+.shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: clamp(var(--sp-6), 5.5vw, var(--sp-8));
+}
+
+.section--alt {
+  background: var(--bg-alt);
+}
+
+.section__title {
+  font-size: var(--fs-2xl);
+  margin-bottom: var(--sp-3);
+}
+
+.section__lede {
+  font-size: var(--fs-lg);
+  color: var(--text-muted);
+  max-width: 58ch;
+  margin-bottom: var(--sp-6);
+}
+
+
+/* 4. Header ================================================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--speed) var(--ease),
+    box-shadow var(--speed) var(--ease);
+}
+
+/* main.js sets data-scrolled once the page moves off the top. */
+.site-header[data-scrolled] {
+  border-bottom-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  min-height: 5rem;
+  transition: min-height var(--speed) var(--ease);
+}
+
+.site-header[data-scrolled] .site-header__inner {
+  min-height: 3.75rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 680;
+  font-size: var(--fs-lg);
+  letter-spacing: -0.02em;
+  min-width: 0;
+}
+
+.brand:hover {
+  color: var(--text);
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--accent);
+}
+
+.brand__mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Scanned logo. Sized by height so it sits on the header's baseline grid
+   regardless of the source file's proportions. */
+/* The logo is a three-line stacked lockup, so it needs more height than a
+   single-line wordmark would to stay readable. The header grows to suit. */
+.brand__logo {
+  display: block;
+  height: 3rem;
+  width: auto;
+  transition: height var(--speed) var(--ease);
+}
+
+.site-header[data-scrolled] .brand__logo {
+  height: 2.25rem;
+}
+
+.brand__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 620;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color var(--speed) var(--ease),
+    color var(--speed) var(--ease),
+    transform var(--speed) var(--ease);
+}
+
+.header-phone:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.header-phone__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* On narrow screens the shop name and a full phone number can't both fit, and
+   the name was losing — truncating to "Advanced Aut…". The number collapses to
+   an icon-only button instead; it keeps its aria-label, so it still announces
+   as "Call (301) 782-7778". */
+@media (max-width: 560px) {
+  .brand__text {
+    font-size: var(--fs-base);
+  }
+
+  .brand__mark {
+    width: 1.875rem;
+    height: 1.875rem;
+  }
+
+  .header-phone {
+    padding: var(--sp-2);
+  }
+
+  .header-phone span {
+    display: none;
+  }
+
+  .header-phone__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+
+/* 5. Status banner ========================================================= */
+.status {
+  border-block: 1px solid;
+  border-color: var(--st-border);
+  background: var(--st-bg);
+  color: var(--st-text);
+}
+
+.status[data-level="good"] {
+  --st-bg: var(--st-good-bg);
+  --st-border: var(--st-good-border);
+  --st-text: var(--st-good-text);
+  --st-accent: var(--st-good-accent);
+}
+
+.status[data-level="info"] {
+  --st-bg: var(--st-info-bg);
+  --st-border: var(--st-info-border);
+  --st-text: var(--st-info-text);
+  --st-accent: var(--st-info-accent);
+}
+
+.status[data-level="warning"] {
+  --st-bg: var(--st-warning-bg);
+  --st-border: var(--st-warning-border);
+  --st-text: var(--st-warning-text);
+  --st-accent: var(--st-warning-accent);
+}
+
+.status[data-level="closed"] {
+  --st-bg: var(--st-closed-bg);
+  --st-border: var(--st-closed-border);
+  --st-text: var(--st-closed-text);
+  --st-accent: var(--st-closed-accent);
+}
+
+.status__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  padding-block: var(--sp-5);
+}
+
+.status__icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: 0.1rem;
+  color: var(--st-accent);
+}
+
+.status__body {
+  min-width: 0;
+}
+
+.status__title {
+  font-size: var(--fs-lg);
+  font-weight: 680;
+  letter-spacing: -0.015em;
+}
+
+.status__message {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  max-width: 72ch;
+  opacity: 0.92;
+}
+
+.status__until {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--sp-3);
+  padding: var(--sp-1) var(--sp-3);
+  border: 1px solid var(--st-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--st-accent) 10%, transparent);
+  font-size: var(--fs-xs);
+  font-weight: 640;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+
+/* 6. Hero ================================================================== */
+.hero {
+  padding-top: clamp(var(--sp-6), 6vw, var(--sp-8));
+  padding-bottom: clamp(var(--sp-6), 5vw, var(--sp-7));
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Two columns once there's room — copy left, shop photo right. Below that
+   they stack, photo last, so the name and hours come first on a phone. */
+.hero__inner {
+  display: grid;
+  gap: clamp(var(--sp-5), 4vw, var(--sp-7));
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* Only constrain the text column. Previously this cap sat on the whole hero,
+   which is what made it read as too narrow. */
+.hero__copy {
+  max-width: 34rem;
+}
+
+.hero__media {
+  margin: 0;
+  min-width: 0;
+}
+
+.hero__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+}
+
+.hero__eyebrow {
+  font-size: var(--fs-sm);
+  font-weight: 640;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--sp-4);
+}
+
+.hero__title {
+  font-size: var(--fs-3xl);
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+
+.hero__tagline {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-xl);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--text-muted);
+  letter-spacing: -0.01em;
+}
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+  margin-top: var(--sp-6);
+}
+
+.open-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: var(--fs-sm);
+  font-weight: 620;
+}
+
+.open-pill__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--text-subtle);
+  flex-shrink: 0;
+}
+
+.open-pill[data-open="true"] {
+  border-color: var(--st-good-border);
+  background: var(--st-good-bg);
+  color: var(--st-good-text);
+}
+
+.open-pill[data-open="true"] .open-pill__dot {
+  background: var(--st-good-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--st-good-accent) 25%, transparent);
+}
+
+.open-pill[data-open="false"] {
+  border-color: var(--border-strong);
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+/* 7. Services ============================================================== */
+.service-grid {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--speed) var(--ease);
+}
+
+.service-card:hover {
+  border-color: var(--border-strong);
+}
+
+/* No rounded tinted chip behind the icon — just the icon, at a size you can
+   actually read. The chip was the other big product-landing-page tell. */
+.service-card__icon {
+  color: var(--accent);
+  line-height: 0;
+}
+
+.service-card__icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.service-card__name {
+  font-size: var(--fs-lg);
+  font-weight: 650;
+}
+
+.service-card__desc {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+
+/* 8. About ================================================================= */
+.about {
+  display: grid;
+  gap: clamp(var(--sp-6), 5vw, var(--sp-8));
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .about {
+    grid-template-columns: 1.15fr 1fr;
+  }
+}
+
+.about__copy p {
+  font-size: var(--fs-lg);
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 55ch;
+}
+
+.about__copy p+p {
+  margin-top: var(--sp-4);
+}
+
+.stat-grid {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.stat {
+  padding: var(--sp-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: left;
+}
+
+/* Deliberately NOT accent-colored. Oversized blue metrics are the visual
+   signature of a SaaS pricing page; in plain text they just read as facts. */
+.stat__value {
+  display: block;
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat__label {
+  display: block;
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  font-weight: 560;
+  line-height: 1.4;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+/* 9. Updates =============================================================== */
+.update-list {
+  display: grid;
+  gap: var(--sp-4);
+  max-width: 48rem;
+}
+
+.update {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+.update__date {
+  font-size: var(--fs-xs);
+  font-weight: 620;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.update__title {
+  font-size: var(--fs-lg);
+  font-weight: 650;
+}
+
+.update__body {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+
+/* 10. Hours & location ===================================================== */
+.location {
+  display: grid;
+  gap: clamp(var(--sp-6), 5vw, var(--sp-8));
+}
+
+@media (min-width: 900px) {
+  .location {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  }
+}
+
+.location__subtitle {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--sp-4);
+}
+
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.hours-table td {
+  padding: var(--sp-3) var(--sp-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.hours-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.hours-table .hours-day {
+  font-weight: 560;
+}
+
+.hours-table .hours-time {
+  text-align: right;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.hours-table tr[data-today] .hours-day,
+.hours-table tr[data-today] .hours-time {
+  color: var(--text);
+  font-weight: 680;
+}
+
+.hours-table tr[data-today] {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.hours-table tr[data-today] .hours-day {
+  padding-left: var(--sp-4);
+}
+
+.hours-table .hours-closed {
+  color: var(--text-subtle);
+}
+
+.hours-note {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-xs);
+  color: var(--text-subtle);
+  line-height: 1.55;
+}
+
+.contact {
+  font-style: normal;
+  display: grid;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-5);
+  font-size: var(--fs-base);
+}
+
+.contact__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  color: var(--text-muted);
+}
+
+.contact__icon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.3rem;
+  color: var(--text-subtle);
+}
+
+.contact__row a {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.map {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  aspect-ratio: 16 / 10;
+}
+
+.map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .map {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+
+/* 11. Footer =============================================================== */
+.site-footer {
+  padding-block: var(--sp-7);
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.site-footer__name {
+  font-weight: 650;
+  font-size: var(--fs-lg);
+  letter-spacing: -0.02em;
+}
+
+.site-footer__legal {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--text-subtle);
+}
+
+
+/* 12. No-script fallback =================================================== */
+.noscript {
+  padding-block: var(--sp-7);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.noscript h2 {
+  font-size: var(--fs-xl);
+  margin-bottom: var(--sp-3);
+}
+
+.noscript p {
+  margin-bottom: var(--sp-4);
+  color: var(--text-muted);
+}
