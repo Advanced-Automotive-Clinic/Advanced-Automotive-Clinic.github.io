@@ -167,35 +167,3 @@ is a ~20-line dependency-free `build.js` that reads the same `site.config.js` an
 writes out a finished `index.html` at deploy time. Nothing about the config format
 would need to change.
 
-
-### Notes
-- [x] Very nice
-- [x] this design reads more like tech startup, I'm wondering about alternatives in design
-  - [x] the theme... I'm wondering if a light theme would be more fitting
-- [x] the icons... could open source icons be used? or is this too much dependency? i.e. something like ReactIcons.
-  - [x] I'm not sure if I don't like the icons or they're just too small in the site
-- [x] I like the dynamic display of whether the shop is open or closed
-- [x] also check the assets/logo. I think that could be the tab icon and the header logo? what do you think
-  - Header logo: yes, done. Tab icon: no — see **Images** above for why.
-- [x] there's a banner/hero image in assets/hero.jpg
-  - [x] please rename it accoringly if needed
-  - [x] I'd like to use this above the fold, in a responsive way
-- [x] the hero looks a little too narrow
-- [x] is the `<span data-field="header-phone-text"></span>` really necessary for SEO? seems repetitive since the number is already in the nav
-  - what's the case for keeping it?
-  - That span **is** the number in the nav — it's the visible text inside the
-    header call button. Remove it and the header shows a bare phone icon with
-    no number. It does nothing for SEO (Google takes the number from the
-    LocalBusiness JSON-LD); the case for keeping it is purely UX: it's the
-    one-tap call target that stays on screen while you scroll. It already
-    hides itself below 560px, so the button is icon-only on phones. Keeping.
-- [x] The footer re-states all the info, the business name, address, and phone. I'm asuming this is fine, what do you think? it's very close to the hours and location section, maybe that's why it feels redundant.
-  - Not fine — adjacency was exactly the problem. The footer's address and
-    phone sat ~200px below the same details in "Find us", but as plain text
-    rather than links, and without the email. Strictly worse than the block
-    above it. Restating name/address/phone in a footer is a multi-page
-    convention, where the footer is the global fallback; a one-pager has
-    nothing to fall back from. Removed the address/phone line, and dropped
-    the duplicate name from the © line. No SEO cost — those details still
-    reach Google through the LocalBusiness JSON-LD.
-- [x] please change the favicon to the logo
