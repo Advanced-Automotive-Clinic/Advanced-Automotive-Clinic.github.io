@@ -28,12 +28,10 @@ window.SITE_CONFIG = {
    * ======================================================================== */
   status: {
     active: true,
-    level: "warning",
-    title: "Not accepting new customers",
+    level: "info",
+    title: "Referral-only shop",
     message:
-      "We're unable to accept new customers right now, unless you're referred by an existing customer. " +
-      "Existing customers: we're still here for you. Call us as usual for service on a vehicle we've worked on before.",
-    until: "2026-12-31",
+      "We operate exclusively on a referral basis. All services require a referral from a vetted and verified individual who is already part of our network."
   },
 
 
@@ -97,10 +95,10 @@ window.SITE_CONFIG = {
    * ======================================================================== */
   timezone: "America/New_York",
   hours: {
-    mon: ["08:30", "18:00"],
-    tue: ["08:30", "18:00"],
-    wed: ["08:30", "18:00"],
-    thu: ["08:30", "18:00"],
+    mon: ["08:30", "23:30"],
+    tue: ["08:30", "23:30"],
+    wed: ["08:30", "23:30"],
+    thu: ["08:30", "23:30"],
     fri: ["08:30", "18:00"],
     sat: ["08:30", "13:00"],
     sun: null,
@@ -167,11 +165,11 @@ window.SITE_CONFIG = {
         "draw diagnosis on vehicles that won't stay charged.",
     },
     {
-      name: "State Inspection",
+      name: "MD State Safety Inspection Repairs",
       icon: "inspection",
       description:
-        "Maryland state safety inspections and re-inspections, by appointment " +
-        "most weekday mornings.",
+        "Repairs to bring your vehicle up to Maryland state safety inspection " +
+        "standards, including work on items flagged for re-inspection.",
     },
   ],
 
@@ -192,29 +190,9 @@ window.SITE_CONFIG = {
     ],
     stats: [
       { value: "20+", label: "Years in business" },
-      { value: "3", label: "ASE-certified technicians" },
-      { value: "24mo", label: "Parts & labor warranty" },
+      { value: "3", label: "Certified technicians" },
+      { value: "6-12mo", label: "Parts & labor warranty" },
       { value: "4.8", label: "Average review rating" },
     ],
   },
-
-
-  /* ==========================================================================
-   * 7. UPDATES                                            TODO: replace below
-   * --------------------------------------------------------------------------
-   * A dated log of announcements. Newest first. Set to [] to hide the section.
-   * Use this for things with a shelf life — holiday closures, new services,
-   * schedule changes. The status banner above is for the CURRENT state;
-   * this is the running history.
-   * ======================================================================== */
-  updates: [
-    {
-      date: "2026-09-15",
-      title: "Intake paused through October",
-      body:
-        "Our schedule is full through the end of October. We've stopped booking " +
-        "new customers until the backlog clears. If you've had work done here " +
-        "before, nothing changes — call the shop as usual.",
-    }
-  ],
 };

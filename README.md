@@ -54,7 +54,6 @@ All of it is in `site.config.js`, in numbered sections:
 4. **Hours** — drives both the hours table and the live "Open now" indicator.
 5. **Services** — add or remove freely; the grid reflows on its own.
 6. **About** — the blurb and the four stat tiles. Delete the block to hide the section.
-7. **Updates** — the dated announcement list. Set to `[]` to hide the section.
 
 Sections with no content hide themselves, so you can't end up with an empty heading.
 
@@ -166,4 +165,3 @@ well for a local business, but if you ever want real static HTML, the upgrade pa
 is a ~20-line dependency-free `build.js` that reads the same `site.config.js` and
 writes out a finished `index.html` at deploy time. Nothing about the config format
 would need to change.
-

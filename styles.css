@@ -719,44 +719,6 @@ iframe {
 }
 
 
-/* 9. Updates =============================================================== */
-.update-list {
-  display: grid;
-  gap: var(--sp-4);
-  max-width: 48rem;
-}
-
-.update {
-  display: grid;
-  gap: var(--sp-2);
-  padding: var(--sp-5);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
-}
-
-.update__date {
-  font-size: var(--fs-xs);
-  font-weight: 620;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-subtle);
-  font-variant-numeric: tabular-nums;
-}
-
-.update__title {
-  font-size: var(--fs-lg);
-  font-weight: 650;
-}
-
-.update__body {
-  font-size: var(--fs-sm);
-  color: var(--text-muted);
-  line-height: 1.65;
-}
-
-
 /* 10. Hours & location ===================================================== */
 .location {
   display: grid;

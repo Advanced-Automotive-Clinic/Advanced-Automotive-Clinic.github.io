@@ -496,45 +496,7 @@
   }
 
 
-  /* == 6. Updates ========================================================== */
-  function renderUpdates() {
-    var section = document.querySelector('[data-section="updates"]');
-    var list = field("updates");
-    var items = cfg.updates || [];
-    if (!section || !list) return;
-
-    if (!items.length) { section.hidden = true; return; }
-    section.hidden = false;
-    list.textContent = "";
-
-    items.forEach(function (item) {
-      if (!item || !item.title) return;
-
-      var li = el("li", "update");
-
-      if (item.date) {
-        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(item.date).trim());
-        if (m) {
-          var d = new Date(+m[1], +m[2] - 1, +m[3]);
-          var time = el("time", "update__date",
-            d.toLocaleDateString("en-US", {
-              month: "long", day: "numeric", year: "numeric",
-            }));
-          time.setAttribute("datetime", item.date);
-          li.appendChild(time);
-        } else {
-          li.appendChild(el("p", "update__date", item.date));
-        }
-      }
-
-      li.appendChild(el("h3", "update__title", item.title));
-      if (item.body) li.appendChild(el("p", "update__body", item.body));
-      list.appendChild(li);
-    });
-  }
-
-
-  /* == 7. Hours table ====================================================== */
+  /* == 6. Hours table ====================================================== */
   function renderHours() {
     var mount = field("hours");
     var hours = cfg.hours;
@@ -574,7 +536,7 @@
   }
 
 
-  /* == 8. Contact & map ==================================================== */
+  /* == 7. Contact & map ==================================================== */
   function renderLocation() {
     var shop = cfg.shop || {};
     var addr = shop.address || {};
@@ -650,7 +612,7 @@
   }
 
 
-  /* == 9. LocalBusiness structured data ====================================
+  /* == 8. LocalBusiness structured data ====================================
    * Gives search engines the shop's name, address, phone, and hours in a
    * machine-readable form, built from the same config as the visible page.
    * ====================================================================== */
@@ -713,7 +675,7 @@
   }
 
 
-  /* == 10. Sticky header shadow ============================================ */
+  /* == 9. Sticky header shadow ============================================ */
   function bindHeader() {
     var header = document.querySelector("[data-header]");
     if (!header) return;
@@ -739,7 +701,6 @@
     renderOpenPill();
     renderServices();
     renderAbout();
-    renderUpdates();
     renderHours();
     renderLocation();
   }
