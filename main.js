@@ -592,6 +592,25 @@
         emailRow.appendChild(emailLink);
         mount.appendChild(emailRow);
       }
+
+      var social = shop.social || {};
+      if (social.facebook) {
+        var fbRow = el("div", "contact__row");
+        var fbIcon = svg(
+          '<path d="M14 9V7.2c0-.9.3-1.4 1.4-1.4H17V2.6c-.4-.1-1.4-.2-2.5-.2-2.5 0-4 1.5-4 4.2V9H8v3.5h2.5V22h3.5v-9.5h2.8l.4-3.5H14z"/>',
+          // The f glyph is a solid shape, not an outline like the icons above.
+          { fill: "currentColor", stroke: "none" }
+        );
+        fbIcon.setAttribute("class", "contact__icon");
+        fbRow.appendChild(fbIcon);
+
+        var fbLink = el("a", null, "Facebook");
+        fbLink.href = social.facebook;
+        fbLink.target = "_blank";
+        fbLink.rel = "noopener noreferrer";
+        fbRow.appendChild(fbLink);
+        mount.appendChild(fbRow);
+      }
     }
 
     var mapMount = field("map");
@@ -615,12 +634,18 @@
   /* == 8. LocalBusiness structured data ====================================
    * Gives search engines the shop's name, address, phone, and hours in a
    * machine-readable form, built from the same config as the visible page.
+   *
+   * index.html already carries a static copy of this for crawlers that don't
+   * run JavaScript. We replace that node rather than adding a second one —
+   * two competing blocks for the same business is worse than either alone.
    * ====================================================================== */
   function renderSchema() {
     var shop = cfg.shop || {};
     if (!shop.name) return;
 
+    var existing = document.getElementById("shop-schema");
     var addr = shop.address || {};
+    var origin = window.location.origin;
     var data = {
       "@context": "https://schema.org",
       "@type": "AutoRepair",
@@ -628,8 +653,27 @@
       description: shop.tagline || undefined,
       telephone: shop.phone || undefined,
       email: shop.email || undefined,
-      url: window.location.origin + window.location.pathname,
+      url: origin + window.location.pathname,
     };
+
+    // Social profiles, which is how a search engine confirms that this site
+    // and that Facebook page are the same business.
+    var profiles = Object.keys(shop.social || {})
+      .map(function (key) { return shop.social[key]; })
+      .filter(Boolean);
+    if (profiles.length) data.sameAs = profiles;
+
+    if (cfg.images && cfg.images.social) {
+      data.image = origin + "/" + String(cfg.images.social).replace(/^\//, "");
+    }
+
+    if (shop.priceRange) data.priceRange = shop.priceRange;
+
+    if (shop.areaServed && shop.areaServed.length) {
+      data.areaServed = shop.areaServed.map(function (name) {
+        return { "@type": "City", name: name };
+      });
+    }
 
     if (addr.street || addr.city) {
       data.address = {
@@ -670,8 +714,11 @@
 
     var script = document.createElement("script");
     script.type = "application/ld+json";
+    script.id = "shop-schema";
     script.textContent = JSON.stringify(data);
-    document.head.appendChild(script);
+
+    if (existing) existing.parentNode.replaceChild(script, existing);
+    else document.head.appendChild(script);
   }
 
 

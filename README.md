@@ -126,6 +126,22 @@ attributes into the `ICONS` object in `main.js`, following the existing pattern.
 find the shop, **Share → Embed a map**, and copy the `src="..."` value out of the
 iframe it gives you. Set it to `""` to hide the map.
 
+### Social links
+
+`shop.social` holds one line per network. Any entry with a URL gets a row in the
+"Find us" block next to the phone and email, and is also published as `sameAs` in
+the structured data — which is how a search engine works out that this site and
+that Facebook page are the same business. Leave an entry as `""` to hide it.
+
+### Search-engine-only fields
+
+Two values in `shop` never appear anywhere on the page; they exist purely for
+search engines:
+
+- `priceRange` — a rough band, not real prices. `"$"`, `"$$"`, or `"$$$"`.
+- `areaServed` — the towns people search from. List only places the shop
+  genuinely serves. Padding this list does more harm than good.
+
 ---
 
 ## Two places that are NOT in the config
@@ -134,10 +150,26 @@ Because the page renders with JavaScript, a couple of things have to be written
 directly into `index.html` so that search engines and no-JavaScript visitors still
 see them. **If you change the shop name, phone, address, or hours, update these too:**
 
-1. The `<title>` and `<meta name="description">` tags at the top of `index.html`.
-2. The `<noscript>` block near the bottom of `index.html`.
+1. The `<title>`, `<meta name="description">`, and the `og:`/`twitter:` share
+   tags at the top of `index.html`.
+2. The `<script type="application/ld+json" id="shop-schema">` block in the
+   `<head>`. JSON-LD can't be loaded from an external file — `src` is ignored on
+   `ld+json` — so a static copy is the only way to get structured data into the
+   raw HTML, which is what Google reads on its first indexing pass before it
+   runs any JavaScript.
 
-Both are marked with `TODO` comments. This is the only duplication in the project,
+   It is **deliberately partial**: identity facts only (type, name, address,
+   phone, email). Hours, services, and areas served are left out because they're
+   the parts that actually get edited, and `main.js` already rebuilds the whole
+   schema from `site.config.js` and swaps this node out for anything that
+   renders. Keeping hours in both places just invites them to disagree.
+
+   So: don't add hours here. If you want a single generated source of truth
+   instead, the upgrade path is the same `build.js` described at the bottom
+   of this file.
+3. The `<noscript>` block near the bottom of `index.html`.
+
+All three are marked with `TODO` comments. This is the only duplication in the project,
 and it's deliberate — everything in it changes rarely. The status notice is
 deliberately *not* duplicated there, since a stale status is worse than none.
 
@@ -152,6 +184,19 @@ python3 -m http.server 8000
 
 Opening `index.html` directly as a file works too, though the embedded map may not
 load over `file://`.
+
+## SEO files
+
+Three things at the repo root exist only for search engines and link previews:
+
+- `robots.txt` — lets every crawler in and points at the sitemap.
+- `sitemap.xml` — one entry, the home page. Bump `<lastmod>` when content changes.
+- `assets/og-image.jpg` — the 1200x630 picture shown when the link is shared in a
+  text message or posted to Facebook. It's generated from
+  `assets/shopfront-source.jpg`, cropped to the 1.91:1 ratio every platform uses.
+
+All three hard-code the domain `advancedautomotiveclinic.com`. **If the domain
+changes, update all three plus the `canonical` and `og:url` tags in `index.html`.**
 
 ## Deploying
 

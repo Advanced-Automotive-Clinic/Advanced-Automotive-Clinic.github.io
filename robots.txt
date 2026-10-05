@@ -1,0 +1,5 @@
+# Everything here is public. Nothing to hide from crawlers.
+User-agent: *
+Allow: /
+
+Sitemap: https://advancedautomotiveclinic.com/sitemap.xml
