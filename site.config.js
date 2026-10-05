@@ -55,6 +55,21 @@ window.SITE_CONFIG = {
     // Leave as an empty string to hide the map entirely.
     mapEmbedUrl:
       "https://www.google.com/maps?q=14806+Crain+Hwy+Brandywine+MD+20613&output=embed",
+
+    // Social pages. Each one that's filled in gets a row in the contact block
+    // next to the phone and email, and is also handed to search engines as a
+    // confirmed profile of this business. Leave a line as "" to hide it.
+    social: {
+      facebook: "https://www.facebook.com/profile.php?id=100063611378574",
+    },
+
+    // Search-engine-only details. Neither appears anywhere on the page.
+    //
+    //   priceRange  A rough band, not real prices: "$", "$$", or "$$$".
+    //   areaServed  The towns people search from. Only list places you
+    //               genuinely serve — padding this does more harm than good.
+    priceRange: "$$",
+    areaServed: ["Brandywine", "Waldorf", "Clinton", "Upper Marlboro"],
   },
 
 
@@ -68,6 +83,12 @@ window.SITE_CONFIG = {
     // readers and search engines — the image just replaces it visually.
     // Set to "" to show the shop name as plain text instead.
     logo: "assets/logo-wordmark.png",
+
+    // The picture that shows up when someone shares the link in a text
+    // message or posts it to Facebook. 1200x630 is the size every platform
+    // crops to. The same path is hard-coded in index.html's <meta> tags,
+    // which is what the share scrapers actually read — change both together.
+    social: "assets/og-image.jpg",
 
     // The photo beside the shop name, above the fold.
     // Set `hero: null` to remove it and go back to a text-only hero.
